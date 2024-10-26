@@ -16,7 +16,7 @@ class CRUDCharityProject(CRUDBase[CharityProject, CharityProjectCreate,
                 self.model.name == name,
             )
         )).scalars().first()
-    
+
     async def get_projects_by_completion_rate(
             self, session: AsyncSession) -> list:
         projects = await session.execute(

@@ -8,8 +8,7 @@ from app.core.config import settings
 FORMAT = "%Y/%m/%d %H:%M:%S"
 
 
-async def spreadsheets_create(
-        wrapper_services: Aiogoogle) -> str:
+async def spreadsheets_create(wrapper_services: Aiogoogle) -> str:
 
     now_date_time = datetime.now().strftime(FORMAT)
 
@@ -28,18 +27,18 @@ async def spreadsheets_create(
                     'gridProperties': {
                         'rowCount': 100,
                         'columnCount': 11}
-                        }}]}
+                        }
+                    }
+                ]
+            }
 
     response = await wrapper_services.as_service_account(
-        service.spreadsheets.create(json=spreadsheet_body)
-    )
+        service.spreadsheets.create(json=spreadsheet_body))
     return response['spreadsheetId']
 
 
-async def set_user_permissions(
-        spreadsheetid: str,
-        wrapper_services: Aiogoogle
-) -> None:
+async def set_user_permissions(spreadsheetid: str,
+                               wrapper_services: Aiogoogle) -> None:
     permissions_body = {
         'type': 'user',
         'role': 'writer',
@@ -50,16 +49,12 @@ async def set_user_permissions(
         service.permissions.create(
             fileId=spreadsheetid,
             json=permissions_body,
-            fields="id"
-        )
-        )
+            fields="id"))
 
 
-async def spreadsheets_update_value(
-        spreadsheetid: str,
-        closed_projects: list,
-        wrapper_services: Aiogoogle
-) -> None:
+async def spreadsheets_update_value(spreadsheetid: str,
+                                    closed_projects: list,
+                                    wrapper_services: Aiogoogle) -> None:
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover(
         'sheets', 'v4')
@@ -69,8 +64,7 @@ async def spreadsheets_update_value(
         ['Топ проектов по скорости закрытия'],
         ['Название проекта',
          'Время сбора',
-         'Описание']
-    ]
+         'Описание']]
 
     for project in closed_projects:
         new_row = [str(project[0]),
@@ -87,6 +81,4 @@ async def spreadsheets_update_value(
             spreadsheetId=spreadsheetid,
             range='A1:E30',
             valueInputOption='USER_ENTERED',
-            json=update_body
-        )
-    )
+            json=update_body))
