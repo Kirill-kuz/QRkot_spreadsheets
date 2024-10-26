@@ -29,9 +29,9 @@ class CRUDCharityProject(CRUDBase[CharityProject, CharityProjectCreate,
                        'day', CharityProject.create_date)))
             .where(CharityProject.fully_invested == 1)
             .order_by((extract('year', CharityProject.close_date) - extract(
-                'year', CharityProject.create_date)) * 365 +
-                      (extract('month', CharityProject.close_date) - extract
-                       ('month', CharityProject.create_date)) * 30 +
+                'year', CharityProject.create_date)) * 365 + (
+                    extract('month', CharityProject.close_date) - extract(
+                        'month', CharityProject.create_date)) * 30 +
                       (extract('day', CharityProject.close_date) - extract(
                           'day', CharityProject.create_date)))
         )
