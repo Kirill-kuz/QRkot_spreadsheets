@@ -31,10 +31,9 @@ class CRUDCharityProject(CRUDBase[CharityProject, CharityProjectCreate,
             .order_by((extract('year', CharityProject.close_date) - extract(
                 'year', CharityProject.create_date)) * 365 + (
                     extract('month', CharityProject.close_date) - extract(
-                        'month', CharityProject.create_date)) * 30 +
-                      (extract('day', CharityProject.close_date) - extract(
-                          'day', CharityProject.create_date)))
-        )
+                        'month', CharityProject.create_date)) * 30 + (
+                            extract('day', CharityProject.close_date) - extract(
+                                'day', CharityProject.create_date))))
         return projects.all()
 
 
