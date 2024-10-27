@@ -24,6 +24,7 @@ SPREADSHEET_BODY_TEMPLATE = {
     ]
 }
 
+
 async def spreadsheets_create(wrapper_services: Aiogoogle) -> dict:
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
@@ -33,6 +34,7 @@ async def spreadsheets_create(wrapper_services: Aiogoogle) -> dict:
         service.spreadsheets.create(json=spreadsheet_body))
     return {'spreadsheetId': response['spreadsheetId'],
             'spreadsheetUrl': response['spreadsheetUrl']}
+
 
 async def set_user_permissions(spreadsheet_id: str,
                                wrapper_services: Aiogoogle) -> None:
@@ -45,8 +47,9 @@ async def set_user_permissions(spreadsheet_id: str,
         service.permissions.create(
             fileId=spreadsheet_id, json=permissions_body, fields='id'))
 
+
 async def spreadsheets_update_value(spreadsheet_id: str, closed_projects: list,
-                                     wrapper_services: Aiogoogle) -> None:
+                                    wrapper_services: Aiogoogle) -> None:
     now_date_time = datetime.now().strftime(FORMAT)
     service = await wrapper_services.discover('sheets', 'v4')
     spreadsheet_info = await wrapper_services.as_service_account(

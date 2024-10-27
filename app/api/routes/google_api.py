@@ -38,6 +38,7 @@ async def get_project(
             projects,
             wrapper_services)
     except Exception:
-        return ({'error': 'Произошла ошибка при обновлении Google Spreadsheet'},
-                HTTPStatus.INTERNAL_SERVER_ERROR)
+        return (
+            {'error': 'Произошла ошибка при обновлении Google Spreadsheet'},
+            HTTPStatus.INTERNAL_SERVER_ERROR)
     return {'url': f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}'}
