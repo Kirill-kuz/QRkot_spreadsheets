@@ -42,11 +42,9 @@ class Invested(Base):
             self.invested_amount = 0
 
     def __repr__(self):
-        return (
-            f"<Investment("
-            f"{self.full_amount=}, "
-            f"{self.invested_amount=}, "
-            f"{self.fully_invested=}, "
-            f"create_date={self.create_date}, "
-            f"close_date={self.close_date})>"
-        )
+        return (f'{type(self).__name__}('
+                f'{self.full_amount=}, '
+                f'{self.invested_amount=}, '
+                f'{self.fully_invested=}, '
+                f'{self.create_date=}, '
+                f'{self.close_date=})')

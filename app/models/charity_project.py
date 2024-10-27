@@ -15,6 +15,6 @@ class CharityProject(Invested, Base):
 
     def __repr__(self):
         return (
-            f"name={self.name}, "
-            f"description={self.description}, "
-            f"{super().__repr__()})>")
+            f'{self.name=}, '
+            f'{self.description=}, '
+            f'{super().__repr__()})')

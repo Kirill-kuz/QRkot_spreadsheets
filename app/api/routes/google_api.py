@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from aiogoogle import Aiogoogle
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -25,13 +26,18 @@ async def get_project(
 ):
     projects = await charity_project_crud.get_projects_by_completion_rate(
         session)
-    spreadsheetid = await spreadsheets_create(
-        wrapper_services)
-    await set_user_permissions(
-        spreadsheetid,
-        wrapper_services)
-    await spreadsheets_update_value(
-        spreadsheetid,
-        projects,
-        wrapper_services)
-    return projects
+
+    try:
+        spreadsheet_id = await spreadsheets_create(
+            wrapper_services)
+        await set_user_permissions(
+            spreadsheet_id,
+            wrapper_services)
+        await spreadsheets_update_value(
+            spreadsheet_id,
+            projects,
+            wrapper_services)
+    except Exception:
+        return ({'error': 'Произошла ошибка при обновлении Google Spreadsheet'},
+                HTTPStatus.INTERNAL_SERVER_ERROR)
+    return {'url': f'https://docs.google.com/spreadsheets/d/{spreadsheet_id}'}

@@ -13,7 +13,6 @@ class Donation(Invested, Base):
                      index=True)
 
     def __repr__(self):
-        return (
-            f"<Donation("
-            f"user_id={self.user_id}, "
-            f"{super().__repr__()})>")
+        return (f'{type(self).__name__}('
+                f'user_id={self.user_id}, '
+                f'{super().__repr__()})')
