@@ -11,7 +11,6 @@ from app.services.google_api import (
     set_user_permissions,
     spreadsheets_create,
     spreadsheets_update_value,
-    get_spreadsheet_url
 )
 
 router = APIRouter()
