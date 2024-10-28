@@ -68,7 +68,7 @@ async def set_user_permissions(spreadsheet_id: str,
 
 
 async def spreadsheets_update_value(
-        spreadsheetid: str,
+        spreadsheet_id: str,
         projects: List[CharityProject],
         wrapper_services: Aiogoogle
 ) -> None:
@@ -95,7 +95,7 @@ async def spreadsheets_update_value(
     try:
         await wrapper_services.as_service_account(
             service.spreadsheets.values.update(
-                spreadsheetId=spreadsheetid, range=f'R1C1:R{rows}C{cols}',
+                spreadsheetId=spreadsheet_id, range=f'R1C1:R{rows}C{cols}',
                 valueInputOption='USER_ENTERED', json=update_body))
     except (ValueError, HTTPError) as e:
         raise HTTPException(
