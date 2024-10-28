@@ -1,10 +1,8 @@
 from datetime import datetime
 from copy import deepcopy
-from typing import List, NamedTuple
+from typing import List, Tuple
 
-from aiogoogle import Aiogoogle, HTTPError
-from fastapi import HTTPException
-from http import HTTPStatus
+from aiogoogle import Aiogoogle
 
 from app.core.config import settings
 from app.models import CharityProject
@@ -15,7 +13,7 @@ MAX_COLS = 50
 SPREADSHEET_TITLE = 'Отчет на {date}'
 SPREADSHEET_BODY_TEMPLATE = dict(
     properties=dict(
-        title=SPREADSHEET_TITLE.format(date=datetime.now().strftime(FORMAT)),
+        title='',
         locale='ru_RU',
     ),
     sheets=[dict(properties=dict(
@@ -29,19 +27,14 @@ SPREADSHEET_BODY_TEMPLATE = dict(
     ))]
 )
 TABLE_HEADER = [
-    ['Отчет от', datetime.now().strftime(FORMAT)],
+    ['Отчет от'],
     ['Топ проектов по скорости закрытия'],
     ['Название проекта', 'Время сбора', 'Описание']
 ]
 
 
-class SpreadsheetInfo(NamedTuple):
-    spreadsheet_id: str
-    spreadsheet_url: str
-
-
 async def spreadsheets_create(
-        wrapper_services: Aiogoogle, spreadsheet_body=None) -> SpreadsheetInfo:
+        wrapper_services: Aiogoogle, spreadsheet_body=None) -> Tuple[str, str]:
     if spreadsheet_body is None:
         spreadsheet_body = deepcopy(SPREADSHEET_BODY_TEMPLATE)
         spreadsheet_body['properties']['title'] = SPREADSHEET_TITLE.format(
@@ -51,8 +44,7 @@ async def spreadsheets_create(
     response = await wrapper_services.as_service_account(
         service.spreadsheets.create(json=spreadsheet_body)
     )
-    return SpreadsheetInfo(response['spreadsheetId'],
-                           response['spreadsheetUrl'])
+    return response['spreadsheetId'], response['spreadsheetUrl']
 
 
 async def set_user_permissions(spreadsheet_id: str,
@@ -92,21 +84,7 @@ async def spreadsheets_update_value(
     update_body = {
         'majorDimension': 'ROWS', 'values': table_values
     }
-    try:
-        await wrapper_services.as_service_account(
-            service.spreadsheets.values.update(
-                spreadsheetId=spreadsheet_id, range=f'R1C1:R{rows}C{cols}',
-                valueInputOption='USER_ENTERED', json=update_body))
-    except (ValueError, HTTPError) as e:
-        raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
-            detail=f'Ошибка при обновлении данных в таблице: {e}'
-        )
-
-
-async def get_spreadsheet_url(spreadsheet_id: str,
-                              wrapper_services: Aiogoogle):
-    response = await wrapper_services.spreadsheets.v4.Spreadsheets().get(
-        spreadsheetId=spreadsheet_id
-    ).execute()
-    return response['spreadsheetUrl']
+    await wrapper_services.as_service_account(
+        service.spreadsheets.values.update(
+            spreadsheetId=spreadsheet_id, range=f'R1C1:R{rows}C{cols}',
+            valueInputOption='USER_ENTERED', json=update_body))

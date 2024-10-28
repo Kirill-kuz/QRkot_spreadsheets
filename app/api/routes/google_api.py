@@ -29,7 +29,9 @@ async def get_project(
     projects = await charity_project_crud.get_projects_by_completion_rate(
         session
     )
-    spreadsheet_id = await spreadsheets_create(wrapper_services)
+    spreadsheet_id, spreadsheet_url = await spreadsheets_create(
+        wrapper_services)
+
     await set_user_permissions(spreadsheet_id, wrapper_services)
     try:
         await spreadsheets_update_value(
@@ -42,6 +44,5 @@ async def get_project(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=str(error)
         )
-    spreadsheet_url = await get_spreadsheet_url(spreadsheet_id,
-                                                wrapper_services)
+
     return {'url': spreadsheet_url}
