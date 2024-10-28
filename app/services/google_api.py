@@ -9,8 +9,6 @@ from http import HTTPStatus
 from app.core.config import settings
 from app.models import CharityProject
 
-
-
 FORMAT = '%Y/%m/%d %H:%M:%S'
 MAX_ROWS = 100
 MAX_COLS = 50
@@ -38,12 +36,12 @@ TABLE_HEADER = [
 
 
 class SpreadsheetInfo(NamedTuple):
-       spreadsheet_id: str
-       spreadsheet_url: str
+    spreadsheet_id: str
+    spreadsheet_url: str
 
 
-async def spreadsheets_create(wrapper_services: Aiogoogle,
-                                  spreadsheet_body=None) -> SpreadsheetInfo:
+async def spreadsheets_create(
+        wrapper_services: Aiogoogle, spreadsheet_body=None) -> SpreadsheetInfo:
     if spreadsheet_body is None:
         spreadsheet_body = deepcopy(SPREADSHEET_BODY_TEMPLATE)
         spreadsheet_body['properties']['title'] = SPREADSHEET_TITLE.format(
@@ -101,7 +99,7 @@ async def spreadsheets_update_value(
                 valueInputOption='USER_ENTERED', json=update_body))
     except (ValueError, HTTPError) as e:
         raise HTTPException(
-            status_code=HTTPStatus.INTERNAL_SERVER_ERROR, 
+            status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
             detail=f'Ошибка при обновлении данных в таблице: {e}'
         )
 
@@ -111,4 +109,4 @@ async def get_spreadsheet_url(spreadsheet_id: str,
     response = await wrapper_services.spreadsheets.v4.Spreadsheets().get(
         spreadsheetId=spreadsheet_id
     ).execute()
-    return response['spreadsheetUrl'] 
+    return response['spreadsheetUrl']

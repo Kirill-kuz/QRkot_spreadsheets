@@ -42,5 +42,6 @@ async def get_project(
             status_code=HTTPStatus.BAD_REQUEST,
             detail=str(error)
         )
-    spreadsheet_url = await get_spreadsheet_url(spreadsheet_id, wrapper_services) 
+    spreadsheet_url = await get_spreadsheet_url(spreadsheet_id,
+                                                wrapper_services)
     return {'url': spreadsheet_url}
